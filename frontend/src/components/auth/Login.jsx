@@ -43,7 +43,7 @@ const Login = () => {
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message);
+            toast.error(error?.response?.data?.message || "Request failed");
         } finally {
             dispatch(setLoading(false));
         }
@@ -52,7 +52,7 @@ const Login = () => {
         if(user){
             navigate("/");
         }
-    },[])
+    },[navigate, user])
     return (
         <div>
             <Navbar />
@@ -109,7 +109,7 @@ const Login = () => {
                     {
                         loading ? <Button className="w-full my-4"> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> : <Button type="submit" className="w-full my-4">Login</Button>
                     }
-                    <span className='text-sm'>Don't have an account? <Link to="/signup" className='text-blue-600'>Signup</Link></span>
+                    <span className='text-sm'>Don&apos;t have an account? <Link to="/signup" className='text-blue-600'>Signup</Link></span>
                 </form>
             </div>
         </div>
