@@ -56,7 +56,7 @@ const Signup = () => {
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message);
+            toast.error(error?.response?.data?.message || "Request failed");
         } finally{
             dispatch(setLoading(false));
         }
@@ -66,7 +66,7 @@ const Signup = () => {
         if(user){
             navigate("/");
         }
-    },[])
+    },[navigate, user])
     return (
         <div>
             <Navbar />
