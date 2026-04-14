@@ -7,3 +7,9 @@ export const USER_API_END_POINT = `${apiV1}/user`;
 export const JOB_API_END_POINT = `${apiV1}/job`;
 export const APPLICATION_API_END_POINT = `${apiV1}/application`;
 export const COMPANY_API_END_POINT = `${apiV1}/company`;
+
+export const resolveApiAssetUrl = (url) => {
+    if (!url) return "";
+    if (/^https?:\/\//i.test(url)) return url;
+    return `${normalizedBaseUrl}${url.startsWith("/") ? "" : "/"}${url}`;
+};
