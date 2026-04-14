@@ -30,40 +30,44 @@ npm run dev
 **Expected**: App opens at http://localhost:5173 (auto-proxy to backend)
 
 
-## ▲ Deploy to Vercel
 
-This repo is now configured for a **single Vercel project** that serves:
-- React frontend (static build from `frontend/`)
-- Express API as a serverless function at `/api/*`
+## ▲ Deploy to Vercel (Frontend and Backend Separately)
 
-### 1) Push this repo to GitHub
-Make sure your latest changes are pushed.
+Deploy as **two different Vercel projects**:
+- `backend/` → API project
+- `frontend/` → web app project
 
-### 2) Import project in Vercel
-- Go to Vercel Dashboard → **Add New Project**
-- Import your GitHub repo
-- Framework preset can remain auto-detected
-- Build settings are taken from `vercel.json`
+### 1) Deploy Backend (`backend/`)
+1. In Vercel, click **Add New Project** and import the same repo.
+2. Set **Root Directory** to `backend`.
+3. Add backend environment variables:
+   - `MONGO_URI`
+   - `JWT_SECRET`
+   - `CLOUD_NAME`
+   - `API_KEY`
+   - `API_SECRET`
+   - `CLIENT_URLS` (set this after frontend is deployed; you can use localhost first)
+   - `RATE_LIMIT_MAX` (optional)
+4. Deploy and copy the backend URL (example: `https://jobforge-api.vercel.app`).
 
-### 3) Add environment variables in Vercel (Project Settings → Environment Variables)
-Backend variables:
-- `MONGO_URI`
-- `JWT_SECRET`
-- `CLOUD_NAME`
-- `API_KEY`
-- `API_SECRET`
-- `CLIENT_URLS` (set to your Vercel frontend URL, e.g. `https://your-app.vercel.app`)
-- `RATE_LIMIT_MAX` (optional)
+> Backend routing is configured by `backend/vercel.json`, and requests are served by `backend/api/index.js`.
 
-Frontend variable:
-- `VITE_API_BASE_URL` = `https://your-app.vercel.app`
+### 2) Deploy Frontend (`frontend/`)
+1. Create another Vercel project from the same repo.
+2. Set **Root Directory** to `frontend`.
+3. Add frontend environment variable:
+   - `VITE_API_BASE_URL` = your backend URL (example: `https://jobforge-api.vercel.app`)
+4. Deploy the frontend project.
 
-> `VITE_API_BASE_URL` must point to the same deployed domain so frontend calls `/api/v1/*` correctly.
+> SPA routing fallback is configured by `frontend/vercel.json`.
 
-### 4) Redeploy
-After adding env vars, trigger a redeploy from Vercel.
+### 3) Final CORS Update
+After frontend deploys, go back to backend project env vars and set:
+- `CLIENT_URLS=https://your-frontend.vercel.app`
 
-### 5) Verify
-- Frontend loads from your Vercel URL
-- API health check example: `https://your-app.vercel.app/api/v1/job/get`
+Then redeploy backend once.
 
+### 4) Verify
+- Frontend loads from frontend URL.
+- Frontend network requests hit backend URL + `/api/v1/*`.
+- Test API directly: `https://your-backend.vercel.app/api/v1/job/get`
