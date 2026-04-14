@@ -7,6 +7,11 @@ import userRoute from "./routes/user.route.js";
 import companyRoute from "./routes/company.route.js";
 import jobRoute from "./routes/job.route.js";
 import applicationRoute from "./routes/application.route.js";
+import dns from "dns";
+
+//change dns
+dns.setServers(["1.1.1.1","8.8.8.8"]);
+
 
 dotenv.config({});
 

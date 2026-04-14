@@ -4,6 +4,10 @@ import bcrypt from "bcryptjs";
 import { User } from "../models/user.model.js";
 import { Company } from "../models/company.model.js";
 import { Job } from "../models/job.model.js";
+import dns from "dns";
+
+//change dns
+dns.setServers(["1.1.1.1","8.8.8.8"]);
 
 dotenv.config({});
 
@@ -18,29 +22,86 @@ const recruiterSeed = {
 const companySeeds = [
   {
     name: "NovaTech Labs",
-    description: "Building scalable hiring and productivity platforms.",
+    description: "Building scalable hiring platforms.",
     website: "https://novatech.example.com",
     location: "San Francisco, CA"
   },
   {
     name: "BrightPixel Studio",
-    description: "Design-first product engineering for startups.",
+    description: "Design-first product engineering.",
     website: "https://brightpixel.example.com",
     location: "Austin, TX"
   },
   {
     name: "CloudBridge Systems",
-    description: "Cloud modernization and developer tooling.",
+    description: "Cloud modernization solutions.",
     website: "https://cloudbridge.example.com",
     location: "Seattle, WA"
+  },
+
+  // 🔥 NEW COMPANIES
+
+  {
+    name: "CodeCraft Solutions",
+    description: "Custom software development company.",
+    website: "https://codecraft.example.com",
+    location: "New York, NY"
+  },
+  {
+    name: "DataNest Analytics",
+    description: "Data-driven insights and analytics.",
+    website: "https://datanest.example.com",
+    location: "Chicago, IL"
+  },
+  {
+    name: "NextGen AI",
+    description: "AI-powered solutions and automation.",
+    website: "https://nextgenai.example.com",
+    location: "Boston, MA"
+  },
+  {
+    name: "PixelForge Tech",
+    description: "Creative web and mobile applications.",
+    website: "https://pixelforge.example.com",
+    location: "Los Angeles, CA"
+  },
+  {
+    name: "SecureNet Systems",
+    description: "Cybersecurity and network protection.",
+    website: "https://securenet.example.com",
+    location: "Dallas, TX"
+  },
+  {
+    name: "DevMatrix",
+    description: "Developer tools and SaaS products.",
+    website: "https://devmatrix.example.com",
+    location: "San Jose, CA"
+  },
+  {
+    name: "InnoSoft Labs",
+    description: "Innovative enterprise solutions.",
+    website: "https://innosoft.example.com",
+    location: "Denver, CO"
+  },
+  {
+    name: "Skyline Tech",
+    description: "Cloud-native app development.",
+    website: "https://skyline.example.com",
+    location: "San Diego, CA"
+  },
+  {
+    name: "QuantumLeap Tech",
+    description: "Next-gen computing and AI research.",
+    website: "https://quantumleap.example.com",
+    location: "Palo Alto, CA"
   }
 ];
 
 const jobSeeds = [
   {
     title: "Frontend Developer",
-    description: "Build responsive UI components in React and optimize UX performance.",
-    requirements: ["React", "JavaScript", "Tailwind CSS"],
+    description: "Build UI with React.",
+    requirements: ["React", "JS"],
     salary: 14,
     experienceLevel: 2,
     location: "Remote",
@@ -50,8 +111,8 @@ const jobSeeds = [
   },
   {
     title: "Backend Engineer",
-    description: "Develop and maintain secure REST APIs using Node.js and MongoDB.",
-    requirements: ["Node.js", "Express", "MongoDB"],
+    description: "Build APIs with Node.js.",
+    requirements: ["Node.js", "MongoDB"],
     salary: 18,
     experienceLevel: 3,
     location: "Seattle, WA",
@@ -60,9 +121,9 @@ const jobSeeds = [
     companyName: "CloudBridge Systems"
   },
   {
-    title: "UI/UX Designer",
-    description: "Create design systems and high-fidelity product experiences.",
-    requirements: ["Figma", "Wireframing", "Prototyping"],
+    title: "UI Designer",
+    description: "Design modern UI systems.",
+    requirements: ["Figma"],
     salary: 11,
     experienceLevel: 2,
     location: "Austin, TX",
@@ -72,8 +133,8 @@ const jobSeeds = [
   },
   {
     title: "DevOps Engineer",
-    description: "Automate deployments and improve infrastructure reliability across environments.",
-    requirements: ["Docker", "CI/CD", "AWS"],
+    description: "Manage CI/CD pipelines.",
+    requirements: ["Docker", "AWS"],
     salary: 20,
     experienceLevel: 4,
     location: "Remote",
@@ -83,25 +144,94 @@ const jobSeeds = [
   },
   {
     title: "Product Manager",
-    description: "Drive roadmap planning and cross-functional delivery for hiring workflows.",
-    requirements: ["Roadmapping", "Agile", "Stakeholder Management"],
+    description: "Manage product lifecycle.",
+    requirements: ["Agile"],
     salary: 16,
     experienceLevel: 3,
-    location: "San Francisco, CA",
+    location: "SF",
     jobType: "Full-time",
     position: 1,
     companyName: "NovaTech Labs"
   },
   {
-    title: "QA Automation Engineer",
-    description: "Build and maintain robust automated test suites for web applications.",
-    requirements: ["Cypress", "Testing", "JavaScript"],
+    title: "QA Engineer",
+    description: "Automate testing.",
+    requirements: ["Cypress"],
     salary: 13,
     experienceLevel: 2,
     location: "Remote",
     jobType: "Contract",
     position: 2,
     companyName: "BrightPixel Studio"
+  },
+
+  // 🔥 6 MORE (covering all companies)
+
+  {
+    title: "Full Stack Developer",
+    description: "MERN stack development.",
+    requirements: ["React", "Node"],
+    salary: 17,
+    experienceLevel: 3,
+    location: "Remote",
+    jobType: "Full-time",
+    position: 2,
+    companyName: "CodeCraft Solutions"
+  },
+  {
+    title: "Data Analyst",
+    description: "Analyze datasets.",
+    requirements: ["SQL", "Python"],
+    salary: 12,
+    experienceLevel: 2,
+    location: "Chicago",
+    jobType: "Full-time",
+    position: 1,
+    companyName: "DataNest Analytics"
+  },
+  {
+    title: "ML Engineer",
+    description: "Build ML models.",
+    requirements: ["Python", "ML"],
+    salary: 22,
+    experienceLevel: 4,
+    location: "Remote",
+    jobType: "Full-time",
+    position: 1,
+    companyName: "NextGen AI"
+  },
+  {
+    title: "Security Engineer",
+    description: "Secure systems.",
+    requirements: ["Cybersecurity"],
+    salary: 19,
+    experienceLevel: 3,
+    location: "Dallas",
+    jobType: "Full-time",
+    position: 1,
+    companyName: "SecureNet Systems"
+  },
+  {
+    title: "System Admin",
+    description: "Maintain servers.",
+    requirements: ["Linux"],
+    salary: 10,
+    experienceLevel: 2,
+    location: "Denver",
+    jobType: "Full-time",
+    position: 1,
+    companyName: "InnoSoft Labs"
+  },
+  {
+    title: "Cloud Engineer",
+    description: "Cloud infrastructure.",
+    requirements: ["AWS", "Kubernetes"],
+    salary: 21,
+    experienceLevel: 3,
+    location: "San Diego",
+    jobType: "Full-time",
+    position: 1,
+    companyName: "Skyline Tech"
   }
 ];
 

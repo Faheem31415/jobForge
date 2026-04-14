@@ -49,58 +49,89 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { email, password, role } = req.body;
-        
+
+        // ✅ Validate input
         if (!email || !password || !role) {
             return res.status(400).json({
-                message: "Something is missing",
+                message: "Email, password and role are required",
                 success: false
             });
-        };
-        let user = await User.findOne({ email });
+        }
+
+        // ✅ Check user
+        const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({
-                message: "Incorrect email or password.",
-                success: false,
-            })
+                message: "Invalid email or password",
+                success: false
+            });
         }
+
+        // ✅ Check password
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         if (!isPasswordMatch) {
             return res.status(400).json({
-                message: "Incorrect email or password.",
-                success: false,
-            })
-        };
-        // check role is correct or not
-        if (role !== user.role) {
-            return res.status(400).json({
-                message: "Account doesn't exist with current role.",
+                message: "Invalid email or password",
                 success: false
-            })
-        };
-
-        const tokenData = {
-            userId: user._id
+            });
         }
-        const token = await jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: '1d' });
 
-        user = {
+        // ✅ Check role
+        if (role !== user.role) {
+            return res.status(403).json({
+                message: "Unauthorized role access",
+                success: false
+            });
+        }
+
+      
+        if (!process.env.JWT_SECRET) {
+            throw new Error("SECRET_KEY is missing in env");
+        }
+
+        // ✅ Generate token
+        const token = jwt.sign(
+            { userId: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "1d" }
+        );
+
+        // ✅ Safe user object
+        const safeUser = {
             _id: user._id,
             fullname: user.fullname,
             email: user.email,
             phoneNumber: user.phoneNumber,
             role: user.role,
             profile: user.profile
-        }
+        };
 
-        return res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpsOnly: true, sameSite: 'strict' }).json({
-            message: `Welcome back ${user.fullname}`,
-            user,
-            success: true
-        })
+        // ✅ Cookie options (production ready)
+        const cookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: 24 * 60 * 60 * 1000
+        };
+
+        return res
+            .status(200)
+            .cookie("token", token, cookieOptions)
+            .json({
+                message: `Welcome back ${user.fullname}`,
+                user: safeUser,
+                success: true
+            });
+
     } catch (error) {
-        console.log(error);
+        console.error("Login Error:", error);
+
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false
+        });
     }
-}
+};
 export const logout = async (req, res) => {
     try {
         return res.status(200).cookie("token", "", { maxAge: 0 }).json({
