@@ -128,14 +128,6 @@ export const login = async (req, res) => {
                 success: true
             });
 
-<<<<<<< HEAD
-=======
-        return res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'strict' }).json({
-            message: `Welcome back ${user.fullname}`,
-            user,
-            success: true
-        })
->>>>>>> 5776738a27a9585a1f591649089f5bc93129064f
     } catch (error) {
         console.error("Login Error:", error);
 
