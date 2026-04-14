@@ -9,6 +9,7 @@ import AppliedJobTable from './AppliedJobTable'
 import UpdateProfileDialog from './UpdateProfileDialog'
 import { useSelector } from 'react-redux'
 import useGetAppliedJobs from '@/hooks/useGetAppliedJobs'
+import { resolveApiAssetUrl } from '@/utils/constant'
 
 const Profile = () => {
     useGetAppliedJobs();
@@ -56,7 +57,7 @@ const Profile = () => {
                             <a
                                 target='_blank'
                                 rel='noopener noreferrer'
-                                href={user.profile.resume}
+                                href={resolveApiAssetUrl(user.profile.resume)}
                                 className='text-blue-500 w-full hover:underline cursor-pointer'
                             >
                                 {user?.profile?.resumeOriginalName || "View resume"}
