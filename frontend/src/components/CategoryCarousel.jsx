@@ -22,18 +22,21 @@ const CategoryCarousel = () => {
     }
 
     return (
-    <div>
-        <Carousel className="w-full max-w-xl mx-auto my-20">
+    <section className='mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8'>
+        <div className='mb-6 flex items-end justify-between'>
+            <h2 className='text-xl font-bold text-slate-900 sm:text-2xl'>Explore by category</h2>
+        </div>
+        <Carousel className="mx-auto w-full max-w-5xl">
             <CarouselContent>
                 {category?.map((cat, index) => (
                     <CarouselItem 
                         key={index} 
-                        className="md:basis-1/2 lg:basis-1/3"
+                        className="basis-1/2 sm:basis-1/3 lg:basis-1/4"
                     >
                         <Button 
                             onClick={() => searchJobHandler(cat)} 
                             variant="outline" 
-                            className="rounded-full"
+                            className="w-full rounded-2xl border-slate-200 bg-white py-5 text-slate-700 transition hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
                         >
                             {cat}
                         </Button>
@@ -43,7 +46,7 @@ const CategoryCarousel = () => {
             <CarouselPrevious />
             <CarouselNext />
         </Carousel>
-    </div>
+    </section>
 );
 }
 

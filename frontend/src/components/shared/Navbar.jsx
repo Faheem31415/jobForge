@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Button } from '../ui/button'
 import { Avatar, AvatarImage } from '../ui/avatar'
-import { LogOut, User2 } from 'lucide-react'
+import { LogOut, Menu, User2, X } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
@@ -14,6 +14,7 @@ const Navbar = () => {
     const { user } = useSelector(store => store.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [mobileOpen, setMobileOpen] = useState(false);
 
     const logoutHandler = async () => {
         try {
@@ -28,36 +29,42 @@ const Navbar = () => {
             toast.error(error?.response?.data?.message || "Request failed");
         }
     }
+
+    const NavLinks = () => (
+        <ul className='flex flex-col gap-3 text-sm font-medium text-slate-700 md:flex-row md:items-center md:gap-6'>
+            {
+                user && user.role === 'recruiter' ? (
+                    <>
+                        <li><Link className='transition hover:text-violet-600' to="/admin/companies">Companies</Link></li>
+                        <li><Link className='transition hover:text-violet-600' to="/admin/jobs">Jobs</Link></li>
+                    </>
+                ) : (
+                    <>
+                        <li><Link className='transition hover:text-violet-600' to="/">Home</Link></li>
+                        <li><Link className='transition hover:text-violet-600' to="/jobs">Jobs</Link></li>
+                        <li><Link className='transition hover:text-violet-600' to="/browse">Browse</Link></li>
+                    </>
+                )
+            }
+        </ul>
+    )
+
     return (
-        <div className='bg-white'>
-            <div className='flex items-center justify-between mx-auto max-w-7xl h-16'>
+        <header id="top" className='sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur'>
+            <div className='mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8'>
                 <div>
-                    <h1 className='text-2xl font-bold'>Job<span className='text-[#F83002]'>Portal</span></h1>
+                    <h1 className='text-2xl font-bold tracking-tight text-slate-900'>Job<span className='text-violet-600'>Portal</span></h1>
                 </div>
-                <div className='flex items-center gap-12'>
-                    <ul className='flex font-medium items-center gap-5'>
-                        {
-                            user && user.role === 'recruiter' ? (
-                                <>
-                                    <li><Link to="/admin/companies">Companies</Link></li>
-                                    <li><Link to="/admin/jobs">Jobs</Link></li>
-                                </>
-                            ) : (
-                                <>
-                                    <li><Link to="/">Home</Link></li>
-                                    <li><Link to="/jobs">Jobs</Link></li>
-                                    <li><Link to="/browse">Browse</Link></li>
-                                </>
-                            )
-                        }
-
-
-                    </ul>
+                <button onClick={() => setMobileOpen(!mobileOpen)} className='rounded-lg border border-slate-200 p-2 text-slate-700 md:hidden'>
+                    {mobileOpen ? <X className='h-4 w-4' /> : <Menu className='h-4 w-4' />}
+                </button>
+                <div className='hidden items-center gap-10 md:flex'>
+                    <NavLinks />
                     {
                         !user ? (
                             <div className='flex items-center gap-2'>
-                                <Link to="/login"><Button variant="outline">Login</Button></Link>
-                                <Link to="/signup"><Button className="bg-[#6A38C2] hover:bg-[#5b30a6]">Signup</Button></Link>
+                                <Link to="/login"><Button variant="outline" className="rounded-xl border-slate-300">Login</Button></Link>
+                                <Link to="/signup"><Button className="rounded-xl bg-violet-600 hover:bg-violet-700">Signup</Button></Link>
                             </div>
                         ) : (
                             <Popover>
@@ -66,7 +73,7 @@ const Navbar = () => {
                                         <AvatarImage src={user?.profile?.profilePhoto} alt="@shadcn" />
                                     </Avatar>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-80">
+                                <PopoverContent className="w-80 rounded-2xl border-slate-200">
                                     <div className=''>
                                         <div className='flex gap-2 space-y-2'>
                                             <Avatar className="cursor-pointer">
@@ -100,8 +107,22 @@ const Navbar = () => {
 
                 </div>
             </div>
-
-        </div>
+            {mobileOpen && (
+                <div className='border-t border-slate-200 bg-white px-4 py-4 md:hidden'>
+                    <div className='space-y-4'>
+                        <NavLinks />
+                        {!user ? (
+                            <div className='grid grid-cols-2 gap-2'>
+                                <Link to="/login"><Button variant="outline" className="w-full rounded-xl">Login</Button></Link>
+                                <Link to="/signup"><Button className="w-full rounded-xl bg-violet-600 hover:bg-violet-700">Signup</Button></Link>
+                            </div>
+                        ) : (
+                            <Button onClick={logoutHandler} variant="outline" className="w-full rounded-xl">Logout</Button>
+                        )}
+                    </div>
+                </div>
+            )}
+        </header>
     )
 }
 
