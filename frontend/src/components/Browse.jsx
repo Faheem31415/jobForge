@@ -17,13 +17,13 @@ const Browse = () => {
         }
     },[])
     return (
-        <div>
+        <div className='min-h-screen bg-slate-50'>
             <Navbar />
-            <div className='max-w-7xl mx-auto my-10'>
-                <h1 className='font-bold text-xl my-10'>Search Results ({allJobs.length})</h1>
-                <div className='grid grid-cols-3 gap-4'>
+            <div className='mx-auto my-10 max-w-7xl px-4 sm:px-6 lg:px-8'>
+                <h1 className='my-8 text-xl font-bold text-slate-900 sm:text-2xl'>Search Results ({allJobs.length})</h1>
+                <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
                     {
-                        allJobs.map((job) => {
+                        allJobs.length <= 0 ? <div className='col-span-full rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center text-slate-500'>No matching jobs available yet.</div> : allJobs.map((job) => {
                             return (
                                 <Job key={job._id} job={job}/>
                             )

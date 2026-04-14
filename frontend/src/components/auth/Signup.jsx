@@ -68,52 +68,56 @@ const Signup = () => {
         }
     },[navigate, user])
     return (
-        <div>
+        <div className='min-h-screen bg-slate-50'>
             <Navbar />
-            <div className='flex items-center justify-center max-w-7xl mx-auto'>
-                <form onSubmit={submitHandler} className='w-1/2 border border-gray-200 rounded-md p-4 my-10'>
-                    <h1 className='font-bold text-xl mb-5'>Sign Up</h1>
+            <div className='mx-auto flex max-w-7xl items-center justify-center px-4 py-10 sm:px-6 lg:px-8'>
+                <form onSubmit={submitHandler} className='w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8'>
+                    <h1 className='mb-6 text-2xl font-bold text-slate-900'>Sign Up</h1>
                     <div className='my-2'>
-                        <Label>Full Name</Label>
+                        <Label className="text-slate-700">Full Name</Label>
                         <Input
                             type="text"
                             value={input.fullname}
                             name="fullname"
                             onChange={changeEventHandler}
                             placeholder="patel"
+                            className="mt-2 h-11 rounded-xl border-slate-300"
                         />
                     </div>
                     <div className='my-2'>
-                        <Label>Email</Label>
+                        <Label className="text-slate-700">Email</Label>
                         <Input
                             type="email"
                             value={input.email}
                             name="email"
                             onChange={changeEventHandler}
                             placeholder="patel@gmail.com"
+                            className="mt-2 h-11 rounded-xl border-slate-300"
                         />
                     </div>
                     <div className='my-2'>
-                        <Label>Phone Number</Label>
+                        <Label className="text-slate-700">Phone Number</Label>
                         <Input
                             type="text"
                             value={input.phoneNumber}
                             name="phoneNumber"
                             onChange={changeEventHandler}
                             placeholder="8080808080"
+                            className="mt-2 h-11 rounded-xl border-slate-300"
                         />
                     </div>
                     <div className='my-2'>
-                        <Label>Password</Label>
+                        <Label className="text-slate-700">Password</Label>
                         <Input
                             type="password"
                             value={input.password}
                             name="password"
                             onChange={changeEventHandler}
                             placeholder="patel@gmail.com"
+                            className="mt-2 h-11 rounded-xl border-slate-300"
                         />
                     </div>
-                    <div className='flex items-center justify-between'>
+                    <div className='flex flex-col justify-between gap-4 sm:flex-row sm:items-center'>
                         <RadioGroup className="flex items-center gap-4 my-5">
                             <div className="flex items-center space-x-2">
                                 <Input
@@ -139,18 +143,16 @@ const Signup = () => {
                             </div>
                         </RadioGroup>
                         <div className='flex items-center gap-2'>
-                            <Label>Profile</Label>
+                            <Label className="text-slate-700">Profile</Label>
                             <Input
                                 accept="image/*"
                                 type="file"
                                 onChange={changeFileHandler}
-                                className="cursor-pointer"
+                                className="cursor-pointer rounded-xl border-slate-300"
                             />
                         </div>
                     </div>
-                    {
-                        loading ? <Button className="w-full my-4"> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> : <Button type="submit" className="w-full my-4">Signup</Button>
-                    }
+                    {loading ? <Button className="my-4 w-full rounded-xl bg-violet-600"> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> : <Button type="submit" className="my-4 w-full rounded-xl bg-violet-600 hover:bg-violet-700">Signup</Button>}
                     <span className='text-sm'>Already have an account? <Link to="/login" className='text-blue-600'>Login</Link></span>
                 </form>
             </div>
