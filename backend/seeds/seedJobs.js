@@ -15,6 +15,14 @@ const recruiterSeed = {
   password: "Password@123"
 };
 
+const studentSeed = {
+  fullname: "Seed Student",
+  email: "seed.student@jobforge.dev",
+  phoneNumber: 9876543211,
+  role: "student",
+  password: "Password@123"
+};
+
 const companySeeds = [
   {
     name: "NovaTech Labs",
@@ -112,18 +120,23 @@ const seedJobs = async () => {
 
   await mongoose.connect(process.env.MONGO_URI);
 
-  const hashedPassword = await bcrypt.hash(recruiterSeed.password, 10);
+  let recruiter = await User.findOne({ email: recruiterSeed.email });
+  if (!recruiter) {
+    const hashedRecruiterPassword = await bcrypt.hash(recruiterSeed.password, 10);
+    recruiter = await User.create({
+      ...recruiterSeed,
+      password: hashedRecruiterPassword
+    });
+  }
 
-  const recruiter = await User.findOneAndUpdate(
-    { email: recruiterSeed.email },
-    {
-      fullname: recruiterSeed.fullname,
-      phoneNumber: recruiterSeed.phoneNumber,
-      role: recruiterSeed.role,
-      password: hashedPassword
-    },
-    { upsert: true, new: true, setDefaultsOnInsert: true }
-  );
+  let student = await User.findOne({ email: studentSeed.email });
+  if (!student) {
+    const hashedStudentPassword = await bcrypt.hash(studentSeed.password, 10);
+    student = await User.create({
+      ...studentSeed,
+      password: hashedStudentPassword
+    });
+  }
 
   const companyMap = new Map();
   for (const companySeed of companySeeds) {
@@ -174,6 +187,9 @@ const seedJobs = async () => {
   }
 
   console.log(`Seed completed. ${seededCount} new jobs inserted.`);
+  console.log("Seed login accounts:");
+  console.log(`- Recruiter: ${recruiterSeed.email} / ${recruiterSeed.password} (role: recruiter)`);
+  console.log(`- Student: ${studentSeed.email} / ${studentSeed.password} (role: student)`);
   await mongoose.connection.close();
 };
 
