@@ -62,6 +62,9 @@ app.use((req, res, next) => {
   return next();
 });
 
+app.use('/',(req, res) => {
+  res.json({ message: "Welcome to the JobForge API" });
+});
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/company", companyRoute);
 app.use("/api/v1/job", jobRoute);
