@@ -155,7 +155,7 @@ export const updateProfile = async (req, res) => {
             const fileUri = getDataUri(file);
             if (fileUri?.content) {
                 cloudResponse = await cloudinary.uploader.upload(fileUri.content, {
-                    resource_type: "auto",
+                    resource_type: "raw",
                 });
             }
         }

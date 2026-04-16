@@ -57,10 +57,20 @@ const Profile = () => {
                             <a
                                 target='_blank'
                                 rel='noopener noreferrer'
-                                href={resolveApiAssetUrl(user.profile.resume)}
+                                href={(() => {
+                                    const url = resolveApiAssetUrl(user.profile.resume);
+                                    if (url.includes("cloudinary.com")) {
+                                        const originalName = user?.profile?.resumeOriginalName || "resume";
+                                        const baseName = originalName.split('.')[0] || "resume";
+                                        const cleanName = baseName.replace(/[^a-zA-Z0-9]/g, '_');
+                                        return url.replace("/upload/", `/upload/fl_attachment:${cleanName}.pdf/`);
+                                    }
+                                    return url;
+                                })()}
+                                download={user?.profile?.resumeOriginalName || "resume.pdf"}
                                 className='text-blue-500 w-full hover:underline cursor-pointer'
                             >
-                                {user?.profile?.resumeOriginalName || "View resume"}
+                                {user?.profile?.resumeOriginalName || "Download resume"}
                             </a>
                         ) : <span>NA</span>
                     }

@@ -240,6 +240,63 @@ const jobSeeds = [
     jobType: "Full-time",
     position: 1,
     companyName: "Skyline Tech"
+  },
+  
+  // 🔥 NON-TECHNICAL JOBS
+  {
+    title: "HR Manager",
+    description: "Oversee recruitment, employee relations, and company culture.",
+    requirements: ["Communication", "HR Policies", "Conflict Resolution"],
+    salary: 80,
+    experienceLevel: 5,
+    location: "Bangalore",
+    jobType: "Full-time",
+    position: 1,
+    companyName: "NovaTech Labs"
+  },
+  {
+    title: "Digital Marketing Specialist",
+    description: "Drive online campaigns, SEO, and social media strategy.",
+    requirements: ["SEO", "Content Marketing", "Google Ads"],
+    salary: 60,
+    experienceLevel: 2,
+    location: "Delhi NCR",
+    jobType: "Full-time",
+    position: 2,
+    companyName: "BrightPixel Studio"
+  },
+  {
+    title: "Sales Executive",
+    description: "Handle B2B sales and client acquisition.",
+    requirements: ["B2B Sales", "Negotiation", "CRM"],
+    salary: 50,
+    experienceLevel: 1,
+    location: "Mumbai",
+    jobType: "Full-time",
+    position: 4,
+    companyName: "CodeCraft Solutions"
+  },
+  {
+    title: "Product Marketing Manager",
+    description: "Formulate product marketing strategies and market research.",
+    requirements: ["Marketing", "Market Research", "Strategy"],
+    salary: 95,
+    experienceLevel: 4,
+    location: "Pune",
+    jobType: "Full-time",
+    position: 1,
+    companyName: "CloudBridge Systems"
+  },
+  {
+    title: "Customer Support Specialist",
+    description: "Assist clients with technical and account queries.",
+    requirements: ["Communication", "Zendesk", "Patience"],
+    salary: 40,
+    experienceLevel: 0,
+    location: "Hyderabad",
+    jobType: "Full-time",
+    position: 5,
+    companyName: "DataNest Analytics"
   }
 ];
 

@@ -12,13 +12,59 @@ const Jobs = () => {
     const [filterJobs, setFilterJobs] = useState(allJobs);
 
     useEffect(() => {
-        if (searchedQuery) {
+        if (searchedQuery && typeof searchedQuery === 'object') {
+            const hasSelections = Object.values(searchedQuery).some(arr => arr.length > 0);
+            if (!hasSelections) {
+                setFilterJobs(allJobs);
+                return;
+            }
+
             const filteredJobs = allJobs.filter((job) => {
-                return job.title.toLowerCase().includes(searchedQuery.toLowerCase()) ||
-                    job.description.toLowerCase().includes(searchedQuery.toLowerCase()) ||
-                    job.location.toLowerCase().includes(searchedQuery.toLowerCase())
-            })
-            setFilterJobs(filteredJobs)
+                let locationMatch = true;
+                let industryMatch = true;
+                let salaryMatch = true;
+
+                if (searchedQuery.Location && searchedQuery.Location.length > 0) {
+                    locationMatch = searchedQuery.Location.some(loc => job?.location?.toLowerCase().includes(loc.toLowerCase()));
+                }
+
+                if (searchedQuery.Industry && searchedQuery.Industry.length > 0) {
+                    industryMatch = searchedQuery.Industry.some(ind => job?.title?.toLowerCase().includes(ind.toLowerCase()) || job?.description?.toLowerCase().includes(ind.toLowerCase()));
+                }
+
+                if (searchedQuery.Salary && searchedQuery.Salary.length > 0) {
+                    salaryMatch = searchedQuery.Salary.some(sal => {
+                        const jobSalary = Number(job?.salary) || 0;
+                        if (sal === '0-40k') return jobSalary >= 0 && jobSalary <= 40;
+                        if (sal === '42-1lakh') return jobSalary >= 42 && jobSalary <= 100;
+                        if (sal === '1lakh to 5lakh') return jobSalary > 100 && jobSalary <= 500;
+                        return false;
+                    });
+                }
+
+                return locationMatch && industryMatch && salaryMatch;
+            });
+            setFilterJobs(filteredJobs);
+        } else if (searchedQuery && typeof searchedQuery === 'string') {
+            const query = searchedQuery.toLowerCase();
+            const filteredJobs = allJobs.filter((job) => {
+                const textMatch = job?.title?.toLowerCase().includes(query) ||
+                    job?.description?.toLowerCase().includes(query) ||
+                    job?.location?.toLowerCase().includes(query);
+
+                let salaryMatch = false;
+                const jobSalary = Number(job?.salary) || 0;
+                if (query === '0-40k') {
+                    salaryMatch = jobSalary >= 0 && jobSalary <= 40;
+                } else if (query === '42-1lakh') {
+                    salaryMatch = jobSalary >= 42 && jobSalary <= 100;
+                } else if (query === '1lakh to 5lakh') {
+                    salaryMatch = jobSalary > 100 && jobSalary <= 500;
+                }
+
+                return textMatch || salaryMatch;
+            });
+            setFilterJobs(filteredJobs);
         } else {
             setFilterJobs(allJobs)
         }
