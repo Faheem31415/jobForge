@@ -6,7 +6,7 @@ const isAuthenticated = async (req, res, next) => {
 
         if (!token) {
             return res.status(401).json({
-                message: "User not authenticated",
+                message: "Please login first.",
                 success: false,
             });
         }

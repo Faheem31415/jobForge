@@ -4,9 +4,37 @@ import { Bookmark } from 'lucide-react'
 import { Avatar, AvatarImage } from './ui/avatar'
 import { Badge } from './ui/badge'
 import { useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import axios from 'axios'
+import { USER_API_END_POINT } from '@/utils/constant'
+import { setSavedJobs } from '@/redux/authSlice'
+import { toast } from 'sonner'
 
 const Job = ({ job }) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { user } = useSelector(store => store.auth);
+
+    const isSaved = user?.profile?.savedJobs?.includes(job?._id);
+
+    const handleSaveJob = async () => {
+        if (!user) {
+            toast.error("Please login to save jobs.");
+            return;
+        }
+        try {
+            const res = await axios.post(`${USER_API_END_POINT}/profile/saved/${job?._id}`, {}, {
+                withCredentials: true
+            });
+            if (res.data.success) {
+                dispatch(setSavedJobs(res.data.savedJobs));
+                toast.success(res.data.message);
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error(error.response?.data?.message || "Something went wrong.");
+        }
+    }
 
     const daysAgoFunction = (mongodbTime) => {
         const createdAt = new Date(mongodbTime);
@@ -27,24 +55,25 @@ const Job = ({ job }) => {
                 </p>
 
                 <Button
+                    onClick={handleSaveJob}
                     variant="outline"
                     size="icon"
-                    className="rounded-full hover:bg-purple-100 hover:text-purple-600 transition"
+                    className={`rounded-full transition ${isSaved ? 'bg-purple-100 text-purple-600' : 'hover:bg-purple-100 hover:text-purple-600'}`}
                 >
-                    <Bookmark size={18} />
+                    <Bookmark size={18} fill={isSaved ? "currentColor" : "none"} />
                 </Button>
             </div>
 
             {/* Company Info */}
             <div className='flex items-center gap-3 my-4'>
-                <div className="p-1 rounded-full bg-gradient-to-tr from-purple-500 to-indigo-500">
+                <div onClick={() => navigate(`/company/${job?.company?._id}`)} className="cursor-pointer p-1 rounded-full bg-gradient-to-tr from-purple-500 to-indigo-500 hover:scale-105 transition-transform">
                     <Avatar className="bg-white">
                         <AvatarImage src={job?.company?.logo} />
                     </Avatar>
                 </div>
 
                 <div>
-                    <h1 className='font-semibold text-lg text-gray-800'>
+                    <h1 onClick={() => navigate(`/company/${job?.company?._id}`)} className='cursor-pointer font-semibold text-lg text-gray-800 hover:text-purple-600 transition-colors'>
                         {job?.company?.name}
                     </h1>
                     <p className='text-xs text-gray-400'>India</p>

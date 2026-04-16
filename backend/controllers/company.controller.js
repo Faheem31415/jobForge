@@ -134,3 +134,39 @@ export const updateCompany = async (req, res) => {
         });
     }
 };
+
+export const getCompanyProfile = async (req, res) => {
+    try {
+        const companyId = req.params.id;
+
+        if (!mongoose.Types.ObjectId.isValid(companyId)) {
+            return res.status(400).json({
+                message: "Invalid company id.",
+                success: false,
+            });
+        }
+
+        const company = await Company.findById(companyId);
+        if (!company) {
+            return res.status(404).json({
+                message: "Company not found.",
+                success: false,
+            });
+        }
+
+        const { Job } = await import("../models/job.model.js");
+        const jobs = await Job.find({ company: companyId }).sort({ createdAt: -1 });
+
+        return res.status(200).json({
+            company,
+            jobs,
+            success: true,
+        });
+    } catch (error) {
+        console.error("Get Company Profile Error:", error);
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false,
+        });
+    }
+};

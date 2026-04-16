@@ -35,6 +35,7 @@ const Navbar = () => {
             {
                 user && user.role === 'recruiter' ? (
                     <>
+                        <li><Link className='transition hover:text-violet-600' to="/admin/dashboard">Dashboard</Link></li>
                         <li><Link className='transition hover:text-violet-600' to="/admin/companies">Companies</Link></li>
                         <li><Link className='transition hover:text-violet-600' to="/admin/jobs">Jobs</Link></li>
                     </>
@@ -43,6 +44,7 @@ const Navbar = () => {
                         <li><Link className='transition hover:text-violet-600' to="/">Home</Link></li>
                         <li><Link className='transition hover:text-violet-600' to="/jobs">Jobs</Link></li>
                         <li><Link className='transition hover:text-violet-600' to="/browse">Browse</Link></li>
+                        {user && <li><Link className='transition hover:text-violet-600' to="/saved-jobs">Saved Jobs</Link></li>}
                     </>
                 )
             }

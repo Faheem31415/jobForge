@@ -118,7 +118,7 @@ export const getApplicants = async (req, res) => {
 
 export const updateStatus = async (req, res) => {
     try {
-        const { status } = req.body;
+        const { status, interviewDate, interviewLink } = req.body;
         const applicationId = req.params.id;
 
         if (!status) {
@@ -154,10 +154,49 @@ export const updateStatus = async (req, res) => {
         }
 
         application.status = normalizedStatus;
+        
+        if (normalizedStatus === 'accepted' && interviewDate) {
+            application.interviewDate = new Date(interviewDate);
+            application.interviewLink = interviewLink;
+
+            // Trigger Email
+            await application.populate('applicant');
+            await application.populate({ path: 'job', populate: { path: 'company' } });
+            
+            if (application.applicant?.email && application.job) {
+                const { sendInterviewEmail } = await import("../utils/email.js");
+                await sendInterviewEmail(
+                    application.applicant.email,
+                    application.applicant.fullname,
+                    application.job.title,
+                    application.job.company?.name || 'our company',
+                    interviewDate,
+                    interviewLink
+                );
+            }
+        }
+
         await application.save();
 
+        // Socket.IO Notification
+        try {
+            const { io, getReceiverSocketId } = await import("../utils/socket.js");
+            // If they didn't populate applicant yet, we don't have _id (it's populated above in accepted loop though)
+            const applicantId = application.applicant?._id || application.applicant;
+            const applicantSocketId = getReceiverSocketId(applicantId.toString());
+            
+            if (applicantSocketId) {
+                io.to(applicantSocketId).emit("notification", {
+                    message: `Your application status for a job has been updated to ${normalizedStatus}!`,
+                    type: normalizedStatus
+                });
+            }
+        } catch (socketError) {
+            console.error("Socket notification error:", socketError);
+        }
+
         return res.status(200).json({
-            message: "Status updated successfully.",
+            message: normalizedStatus === 'accepted' ? "Status updated & Interview invite sent." : "Status updated successfully.",
             success: true,
         });
     } catch (error) {

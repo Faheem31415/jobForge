@@ -210,3 +210,43 @@ export const updateProfile = async (req, res) => {
         });
     }
 };
+
+export const toggleSaveJob = async (req, res) => {
+    try {
+        const jobId = req.params.id;
+        const userId = req.id; // from isAuthenticated middleware
+        
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found.",
+                success: false
+            });
+        }
+
+        const savedJobs = user.profile.savedJobs || [];
+        const isSaved = savedJobs.includes(jobId);
+
+        if (isSaved) {
+            // Remove it
+            user.profile.savedJobs = savedJobs.filter(id => id.toString() !== jobId);
+        } else {
+            // Add it
+            user.profile.savedJobs.push(jobId);
+        }
+
+        await user.save();
+
+        return res.status(200).json({
+            message: isSaved ? "Job removed from saved list." : "Job saved successfully.",
+            savedJobs: user.profile.savedJobs,
+            success: true
+        });
+    } catch (error) {
+        console.error("Toggle Save Job Error:", error);
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false
+        });
+    }
+};

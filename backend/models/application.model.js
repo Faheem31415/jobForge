@@ -15,6 +15,12 @@ const applicationSchema = new mongoose.Schema({
         type:String,
         enum:['pending', 'accepted', 'rejected'],
         default:'pending'
+    },
+    interviewDate: {
+        type: Date
+    },
+    interviewLink: {
+        type: String
     }
 },{timestamps:true});
 export const Application  = mongoose.model("Application", applicationSchema);

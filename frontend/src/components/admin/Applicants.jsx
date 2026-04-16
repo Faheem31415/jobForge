@@ -22,7 +22,7 @@ const Applicants = () => {
             }
         }
         fetchAllApplicants();
-    }, []);
+    }, [params.id]);
     return (
         <div>
             <Navbar />

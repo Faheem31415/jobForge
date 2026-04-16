@@ -54,24 +54,41 @@ const Profile = () => {
                     <Label className="text-md font-bold text-slate-500">Resume</Label>
                     {
                         user?.profile?.resume ? (
-                            <a
-                                target='_blank'
-                                rel='noopener noreferrer'
-                                href={(() => {
-                                    const url = resolveApiAssetUrl(user.profile.resume);
-                                    if (url.includes("cloudinary.com")) {
-                                        const originalName = user?.profile?.resumeOriginalName || "resume";
-                                        const baseName = originalName.split('.')[0] || "resume";
-                                        const cleanName = baseName.replace(/[^a-zA-Z0-9]/g, '_');
-                                        return url.replace("/upload/", `/upload/fl_attachment:${cleanName}.pdf/`);
-                                    }
-                                    return url;
-                                })()}
-                                download={user?.profile?.resumeOriginalName || "resume.pdf"}
-                                className='text-blue-500 w-full hover:underline cursor-pointer'
-                            >
-                                {user?.profile?.resumeOriginalName || "Download resume"}
-                            </a>
+                            <div className='flex items-center gap-3 flex-wrap'>
+                                {/* View: opens raw Cloudinary URL cleanly in a new tab */}
+                                <a
+                                    href={resolveApiAssetUrl(user.profile.resume)}
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                    className='text-blue-500 hover:underline cursor-pointer text-sm'
+                                >
+                                    {user?.profile?.resumeOriginalName || "View Resume"}
+                                </a>
+
+                                {/* Download: fetches as blob so Chrome never blocks it */}
+                                <button
+                                    onClick={async () => {
+                                        try {
+                                            const response = await fetch(resolveApiAssetUrl(user.profile.resume));
+                                            const blob = await response.blob();
+                                            const blobUrl = URL.createObjectURL(blob);
+                                            const link = document.createElement('a');
+                                            link.href = blobUrl;
+                                            link.download = user?.profile?.resumeOriginalName || 'resume.pdf';
+                                            document.body.appendChild(link);
+                                            link.click();
+                                            document.body.removeChild(link);
+                                            URL.revokeObjectURL(blobUrl);
+                                        } catch (e) {
+                                            // fallback: just open in new tab
+                                            window.open(resolveApiAssetUrl(user.profile.resume), '_blank');
+                                        }
+                                    }}
+                                    className='text-xs text-white bg-violet-600 hover:bg-violet-700 px-3 py-1 rounded-lg transition'
+                                >
+                                    ⬇ Download
+                                </button>
+                            </div>
                         ) : <span>NA</span>
                     }
                 </div>

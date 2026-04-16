@@ -78,7 +78,6 @@ const Login = () => {
                             value={input.password}
                             name="password"
                             onChange={changeEventHandler}
-                            placeholder="patel@gmail.com"
                             className="mt-2 h-11 rounded-xl border-slate-300"
                         />
                     </div>

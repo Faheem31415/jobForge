@@ -14,7 +14,10 @@ import PostJob from './components/admin/PostJob'
 import Applicants from './components/admin/Applicants'
 import ProtectedRoute from './components/admin/ProtectedRoute'
 import ErrorPage from './components/shared/ErrorPage'
-
+import SavedJobs from './components/SavedJobs'
+import CompanyProfile from './components/CompanyProfile'
+import Dashboard from './components/admin/Dashboard'
+import useSocketSetup from './hooks/useSocketSetup'
 
 const appRouter = createBrowserRouter([
   {
@@ -45,7 +48,19 @@ const appRouter = createBrowserRouter([
     path: "/profile",
     element: <Profile />
   },
+  {
+    path: "/saved-jobs",
+    element: <SavedJobs />
+  },
+  {
+    path: "/company/:id",
+    element: <CompanyProfile />
+  },
   // admin ke liye yha se start hoga
+  {
+    path:"/admin/dashboard",
+    element: <ProtectedRoute><Dashboard/></ProtectedRoute>
+  },
   {
     path:"/admin/companies",
     element: <ProtectedRoute><Companies/></ProtectedRoute>
@@ -70,10 +85,10 @@ const appRouter = createBrowserRouter([
     path:"/admin/jobs/:id/applicants",
     element:<ProtectedRoute><Applicants/></ProtectedRoute> 
   },
-
 ].map(route => ({...route, errorElement: <ErrorPage />})));
-function App() {
 
+function App() {
+  useSocketSetup();
   return (
     <div>
       <RouterProvider router={appRouter} />
@@ -81,4 +96,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
