@@ -14,7 +14,7 @@ import { resolveApiAssetUrl } from '@/utils/constant'
 const Profile = () => {
     useGetAppliedJobs();
     const [open, setOpen] = useState(false);
-    const {user} = useSelector(store=>store.auth);
+    const { user } = useSelector(store => store.auth);
 
     return (
         <div className='min-h-screen bg-slate-50'>
@@ -55,15 +55,7 @@ const Profile = () => {
                     {
                         user?.profile?.resume ? (
                             <div className='flex items-center gap-3 flex-wrap'>
-                                {/* View: opens raw Cloudinary URL cleanly in a new tab */}
-                                <a
-                                    href={resolveApiAssetUrl(user.profile.resume)}
-                                    target='_blank'
-                                    rel='noopener noreferrer'
-                                    className='text-blue-500 hover:underline cursor-pointer text-sm'
-                                >
-                                    {user?.profile?.resumeOriginalName || "View Resume"}
-                                </a>
+
 
                                 {/* Download: fetches as blob so Chrome never blocks it */}
                                 <button
@@ -98,7 +90,7 @@ const Profile = () => {
                 {/* Applied Job Table   */}
                 <AppliedJobTable />
             </div>
-            <UpdateProfileDialog open={open} setOpen={setOpen}/>
+            <UpdateProfileDialog open={open} setOpen={setOpen} />
         </div>
     )
 }

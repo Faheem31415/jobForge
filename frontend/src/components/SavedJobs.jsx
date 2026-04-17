@@ -19,8 +19,14 @@ const SavedJobs = () => {
                     withCredentials: true
                 });
                 if (res.data.success) {
+                    // Deduplicate jobs (in case old bug resulted in duplicate IDs in DB)
+                    const uniqueJobs = res.data.savedJobs.filter((job, index, self) => 
+                        index === self.findIndex((t) => (
+                            t._id === job._id
+                        ))
+                    );
                     // Reverse to show latest saved first if order is not already reverse
-                    setSavedJobsData(res.data.savedJobs.reverse());
+                    setSavedJobsData(uniqueJobs.reverse());
                 }
             } catch (error) {
                 console.log(error);

@@ -11,6 +11,7 @@ import CompanyCreate from './components/admin/CompanyCreate'
 import CompanySetup from './components/admin/CompanySetup'
 import AdminJobs from "./components/admin/AdminJobs";
 import PostJob from './components/admin/PostJob'
+import JobSetup from './components/admin/JobSetup'
 import Applicants from './components/admin/Applicants'
 import ProtectedRoute from './components/admin/ProtectedRoute'
 import ErrorPage from './components/shared/ErrorPage'
@@ -82,8 +83,12 @@ const appRouter = createBrowserRouter([
     element:<ProtectedRoute><PostJob/></ProtectedRoute> 
   },
   {
-    path:"/admin/jobs/:id/applicants",
-    element:<ProtectedRoute><Applicants/></ProtectedRoute> 
+    path: "/admin/jobs/:id/applicants",
+    element: <ProtectedRoute><Applicants /></ProtectedRoute>
+  },
+  {
+    path: "/admin/jobs/:id/edit",
+    element: <ProtectedRoute><JobSetup /></ProtectedRoute>
   },
 ].map(route => ({...route, errorElement: <ErrorPage />})));
 

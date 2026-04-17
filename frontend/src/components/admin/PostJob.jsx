@@ -41,9 +41,20 @@ const PostJob = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
+        // Coerce numeric fields before sending to the API
+        const payload = {
+            ...input,
+            salary: Number(input.salary),
+            experience: Number(input.experience),
+            position: Number(input.position),
+        };
+        if (isNaN(payload.salary) || isNaN(payload.experience) || isNaN(payload.position)) {
+            toast.error("Salary, Experience Level, and No of Positions must be valid numbers.");
+            return;
+        }
         try {
             setLoading(true);
-            const res = await axios.post(`${JOB_API_END_POINT}/post`, input,{
+            const res = await axios.post(`${JOB_API_END_POINT}/post`, payload, {
                 headers:{
                     'Content-Type':'application/json'
                 },
@@ -97,9 +108,9 @@ const PostJob = () => {
                             />
                         </div>
                         <div>
-                            <Label>Salary</Label>
+                            <Label>Salary (LPA)</Label>
                             <Input
-                                type="text"
+                                type="number"
                                 name="salary"
                                 value={input.salary}
                                 onChange={changeEventHandler}
@@ -127,9 +138,9 @@ const PostJob = () => {
                             />
                         </div>
                         <div>
-                            <Label>Experience Level</Label>
+                            <Label>Experience Level (yrs)</Label>
                             <Input
-                                type="text"
+                                type="number"
                                 name="experience"
                                 value={input.experience}
                                 onChange={changeEventHandler}

@@ -55,7 +55,7 @@ const Navbar = () => {
         <header id="top" className='sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur'>
             <div className='mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8'>
                 <div>
-                    <h1 className='text-2xl font-bold tracking-tight text-slate-900'>Job<span className='text-violet-600'>Portal</span></h1>
+                    <h1 className='text-2xl font-bold tracking-tight text-slate-900'>Job<span className='text-violet-600'>Forge</span></h1>
                 </div>
                 <button onClick={() => setMobileOpen(!mobileOpen)} className='rounded-lg border border-slate-200 p-2 text-slate-700 md:hidden'>
                     {mobileOpen ? <X className='h-4 w-4' /> : <Menu className='h-4 w-4' />}

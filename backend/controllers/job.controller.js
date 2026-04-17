@@ -123,6 +123,67 @@ export const getJobById = async (req, res) => {
     }
 };
 
+export const updateJob = async (req, res) => {
+    try {
+        const { title, description, requirements, salary, location, jobType, experience, position, companyId } = req.body;
+        const jobId = req.params.id;
+
+        if (!mongoose.Types.ObjectId.isValid(jobId)) {
+            return res.status(400).json({
+                message: "Invalid job id.",
+                success: false,
+            });
+        }
+
+        const job = await Job.findById(jobId);
+        if (!job) {
+            return res.status(404).json({
+                message: "Job not found.",
+                success: false,
+            });
+        }
+
+        // Only the creator or an admin should be able to update
+        if (job.created_by.toString() !== req.id) {
+            return res.status(403).json({
+                message: "You are not authorized to update this job.",
+                success: false,
+            });
+        }
+
+        const requirementsList = requirements ? String(requirements)
+            .split(",")
+            .map((item) => item.trim())
+            .filter(Boolean) : job.requirements;
+
+        const updateData = {
+            title: title?.trim() || job.title,
+            description: description?.trim() || job.description,
+            requirements: requirementsList,
+            salary: salary !== undefined ? Number(salary) : job.salary,
+            location: location?.trim() || job.location,
+            jobType: jobType?.trim() || job.jobType,
+            experienceLevel: experience !== undefined ? Number(experience) : job.experienceLevel,
+            position: position !== undefined ? Number(position) : job.position,
+            company: companyId || job.company,
+        };
+
+        const updatedJob = await Job.findByIdAndUpdate(jobId, updateData, { new: true });
+
+        return res.status(200).json({
+            message: "Job updated successfully.",
+            job: updatedJob,
+            success: true,
+        });
+    } catch (error) {
+        console.error("Update Job Error:", error);
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false,
+        });
+    }
+};
+
 export const getAdminJobs = async (req, res) => {
     try {
         const adminId = req.id;
@@ -266,7 +327,11 @@ export const getJobMatchScore = async (req, res) => {
                 score = parsed.score;
                 reasoning = parsed.reasoning;
             } catch (aiError) {
-                console.error("AI Generation Error, falling back...", aiError);
+                if (aiError?.status === 429) {
+                     console.warn("AI Generation Quota Exceeded (429). Falling back to local heuristic score.");
+                } else {
+                     console.error("AI Generation Error, falling back...", aiError.message || aiError);
+                }
             }
         } 
         

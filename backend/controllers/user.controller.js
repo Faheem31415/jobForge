@@ -224,12 +224,12 @@ export const toggleSaveJob = async (req, res) => {
             });
         }
 
-        const savedJobs = user.profile.savedJobs || [];
-        const isSaved = savedJobs.includes(jobId);
+        user.profile.savedJobs = user.profile.savedJobs || [];
+        const isSaved = user.profile.savedJobs.some(id => id.toString() === jobId);
 
         if (isSaved) {
             // Remove it
-            user.profile.savedJobs = savedJobs.filter(id => id.toString() !== jobId);
+            user.profile.savedJobs = user.profile.savedJobs.filter(id => id.toString() !== jobId);
         } else {
             // Add it
             user.profile.savedJobs.push(jobId);
