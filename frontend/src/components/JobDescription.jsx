@@ -13,7 +13,7 @@ import Navbar from './shared/Navbar';
 const JobDescription = () => {
     const {singleJob} = useSelector(store => store.job);
     const {user} = useSelector(store=>store.auth);
-    const isIntiallyApplied = singleJob?.applications?.some(application => application.applicant === user?._id) || false;
+    const isIntiallyApplied = singleJob?.applications?.some(application => application.applicant?.toString() === user?._id?.toString()) || false;
     const [isApplied, setIsApplied] = useState(isIntiallyApplied);
     const [matchScore, setMatchScore] = useState(null);
     const [matchReason, setMatchReason] = useState("");
@@ -72,7 +72,7 @@ const JobDescription = () => {
                 const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`,{withCredentials:true});
                 if(res.data.success){
                     dispatch(setSingleJob(res.data.job));
-                    setIsApplied(res.data.job.applications.some(application=>application.applicant === user?._id)) // Ensure the state is in sync with fetched data
+                    setIsApplied(res.data.job.applications.some(application => application.applicant?.toString() === user?._id?.toString())) // Ensure the state is in sync with fetched data
                 }
             } catch (error) {
                 console.log(error);
@@ -130,7 +130,7 @@ const JobDescription = () => {
                         </div>
                         {matchReason && (
                             <div className='mt-4 p-4 bg-white/80 rounded-xl text-sm text-slate-700 border border-indigo-100/50 italic'>
-                                "{matchReason}"
+                                &ldquo;{matchReason}&rdquo;
                             </div>
                         )}
                     </div>
