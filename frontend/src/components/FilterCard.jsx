@@ -3,6 +3,7 @@ import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 import { Label } from './ui/label'
 import { useDispatch } from 'react-redux'
 import { setSearchedQuery } from '@/redux/jobSlice'
+import { motion } from 'framer-motion'
 
 const filterData = [
     {
@@ -38,30 +39,50 @@ const FilterCard = () => {
     }, [selectedFilters, dispatch]);
 
     return (
-        <div className='w-full rounded-2xl border border-slate-200 bg-white p-4 shadow-sm md:sticky md:top-20'>
-            <h1 className='text-lg font-bold text-slate-900'>Filter Jobs</h1>
-            <hr className='mt-3 border-slate-200' />
-
-            <div>
+        <div className='w-full rounded-[32px] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:sticky md:top-24'>
+            <div className='flex items-center justify-between'>
+                <h1 className='text-xl font-extrabold text-slate-900 dark:text-white'>Filters</h1>
+                {Object.keys(selectedFilters).length > 0 && (
+                    <button 
+                        onClick={() => setSelectedFilters({})}
+                        className='text-xs font-bold text-primary hover:underline'
+                    >
+                        Reset
+                    </button>
+                )}
+            </div>
+            
+            <div className='mt-8 space-y-8'>
                 {filterData?.map((data, index) => (
                     <div key={index}>
-                        <h1 className='mt-4 text-sm font-semibold uppercase tracking-wide text-slate-500'>
+                        <h1 className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
                             {data.filterType}
                         </h1>
 
                         <RadioGroup
+                            className="mt-4 gap-2"
                             value={selectedFilters[data.filterType] || ''}
                             onValueChange={(value) => changeHandler(data.filterType, value)}
                         >
                             {data.array.map((item, idx) => {
                                 const itemId = `id${index}-${idx}`;
+                                const isSelected = selectedFilters[data.filterType] === item;
                                 return (
                                     <div
                                         key={itemId}
-                                        className='my-2 flex items-center space-x-2 rounded-lg px-1 py-1 transition hover:bg-slate-50'
+                                        className={`flex items-center space-x-3 rounded-xl px-3 py-2.5 transition-all ${isSelected ? 'bg-primary/5 ring-1 ring-primary/20' : 'hover:bg-slate-50 dark:hover:bg-slate-800'}`}
                                     >
-                                        <RadioGroupItem value={item} id={itemId} />
-                                        <Label htmlFor={itemId}>{item}</Label>
+                                        <RadioGroupItem 
+                                            value={item} 
+                                            id={itemId} 
+                                            className={`${isSelected ? 'border-primary text-primary' : ''}`}
+                                        />
+                                        <Label 
+                                            htmlFor={itemId}
+                                            className={`text-sm cursor-pointer transition-colors ${isSelected ? 'font-bold text-slate-900 dark:text-white' : 'text-slate-600 dark:text-slate-400'}`}
+                                        >
+                                            {item}
+                                        </Label>
                                     </div>
                                 );
                             })}
@@ -73,4 +94,4 @@ const FilterCard = () => {
     );
 }
 
-export default FilterCard
+export default FilterCard

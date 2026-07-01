@@ -10,7 +10,8 @@ import { USER_API_END_POINT } from '@/utils/constant'
 import { toast } from 'sonner'
 import { useDispatch, useSelector } from 'react-redux'
 import { setLoading, setUser } from '@/redux/authSlice'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Mail, Lock, LogIn } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 const Login = () => {
     const [input, setInput] = useState({
@@ -18,7 +19,7 @@ const Login = () => {
         password: "",
         role: "",
     });
-    const { loading,user } = useSelector(store => store.auth);
+    const { loading, user } = useSelector(store => store.auth);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -48,71 +49,122 @@ const Login = () => {
             dispatch(setLoading(false));
         }
     }
-    useEffect(()=>{
-        if(user){
+    useEffect(() => {
+        if (user) {
             navigate("/");
         }
-    },[navigate, user])
-    return (
-        <div className='min-h-screen bg-slate-50'>
-            <Navbar />
-            <div className='mx-auto flex max-w-7xl items-center justify-center px-4 py-10 sm:px-6 lg:px-8'>
-                <form onSubmit={submitHandler} className='w-full max-w-xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8'>
-                    <h1 className='mb-6 text-2xl font-bold text-slate-900'>Login</h1>
-                    <div className='my-2'>
-                        <Label className="text-slate-700">Email</Label>
-                        <Input
-                            type="email"
-                            value={input.email}
-                            name="email"
-                            onChange={changeEventHandler}
-                            placeholder="patel@gmail.com"
-                            className="mt-2 h-11 rounded-xl border-slate-300"
-                        />
-                    </div>
+    }, [navigate, user])
 
-                    <div className='my-2'>
-                        <Label className="text-slate-700">Password</Label>
-                        <Input
-                            type="password"
-                            value={input.password}
-                            name="password"
-                            onChange={changeEventHandler}
-                            className="mt-2 h-11 rounded-xl border-slate-300"
-                        />
-                    </div>
-                    <div className='flex items-center justify-between'>
-                        <RadioGroup className="flex items-center gap-4 my-5">
-                            <div className="flex items-center space-x-2">
-                                <Input
-                                    type="radio"
-                                    name="role"
-                                    value="student"
-                                    checked={input.role === 'student'}
-                                    onChange={changeEventHandler}
-                                    className="cursor-pointer"
-                                />
-                                <Label htmlFor="r1">Student</Label>
+    return (
+        <div className='min-h-screen bg-slate-50 dark:bg-slate-950'>
+            <Navbar />
+            <div className='mx-auto flex max-w-7xl items-center justify-center px-4 py-20 sm:px-6 lg:px-8'>
+                <motion.div 
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className='relative w-full max-w-lg'
+                >
+                    <div className='absolute -left-20 -top-20 h-64 w-64 rounded-full bg-primary/20 blur-3xl' />
+                    <div className='absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-indigo-500/20 blur-3xl' />
+
+                    <form 
+                        onSubmit={submitHandler} 
+                        className='relative overflow-hidden rounded-[40px] border border-white bg-white/70 p-8 shadow-2xl backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/70 sm:p-12'
+                    >
+                        <div className='mb-10 text-center'>
+                            <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary'>
+                                <LogIn className='h-8 w-8' />
                             </div>
-                            <div className="flex items-center space-x-2">
-                                <Input
-                                    type="radio"
-                                    name="role"
-                                    value="recruiter"
-                                    checked={input.role === 'recruiter'}
-                                    onChange={changeEventHandler}
-                                    className="cursor-pointer"
-                                />
-                                <Label htmlFor="r2">Recruiter</Label>
+                            <h1 className='text-3xl font-black tracking-tight text-slate-900 dark:text-white'>Welcome Back</h1>
+                            <p className='mt-2 text-sm font-medium text-slate-500'>Sign in to your account to continue</p>
+                        </div>
+
+                        <div className='space-y-6'>
+                            <div className='space-y-2'>
+                                <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Email Address</Label>
+                                <div className='relative'>
+                                    <Mail className='absolute left-4 top-3 h-5 w-5 text-slate-300' />
+                                    <Input
+                                        type="email"
+                                        value={input.email}
+                                        name="email"
+                                        onChange={changeEventHandler}
+                                        placeholder="faheem@example.com"
+                                        className="h-11 rounded-xl border-slate-200 bg-white pl-12 shadow-sm transition-all focus:ring-primary/20 dark:border-slate-800 dark:bg-slate-950"
+                                    />
+                                </div>
                             </div>
-                        </RadioGroup>
-                    </div>
-                    {loading ? <Button className="my-4 w-full rounded-xl bg-violet-600"> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> : <Button type="submit" className="my-4 w-full rounded-xl bg-violet-600 hover:bg-violet-700">Login</Button>}
-                    <span className='text-sm'>Don&apos;t have an account? <Link to="/signup" className='text-blue-600'>Signup</Link></span>
-                </form>
+
+                            <div className='space-y-2'>
+                                <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Password</Label>
+                                <div className='relative'>
+                                    <Lock className='absolute left-4 top-3 h-5 w-5 text-slate-300' />
+                                    <Input
+                                        type="password"
+                                        value={input.password}
+                                        name="password"
+                                        onChange={changeEventHandler}
+                                        placeholder="••••••••"
+                                        className="h-11 rounded-xl border-slate-200 bg-white pl-12 shadow-sm transition-all focus:ring-primary/20 dark:border-slate-800 dark:bg-slate-950"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className='py-2'>
+                                <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Portal Access</Label>
+                                <RadioGroup className="mt-4 flex items-center gap-6">
+                                    <div className="flex items-center space-x-2">
+                                        <Input
+                                            type="radio"
+                                            name="role"
+                                            id="r1"
+                                            value="student"
+                                            checked={input.role === 'student'}
+                                            onChange={changeEventHandler}
+                                            className="h-4 w-4 cursor-pointer accent-primary"
+                                        />
+                                        <Label htmlFor="r1" className="cursor-pointer font-bold text-slate-700 dark:text-slate-300">Student</Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <Input
+                                            type="radio"
+                                            name="role"
+                                            id="r2"
+                                            value="recruiter"
+                                            checked={input.role === 'recruiter'}
+                                            onChange={changeEventHandler}
+                                            className="h-4 w-4 cursor-pointer accent-primary"
+                                        />
+                                        <Label htmlFor="r2" className="cursor-pointer font-bold text-slate-700 dark:text-slate-300">Recruiter</Label>
+                                    </div>
+                                </RadioGroup>
+                            </div>
+                        </div>
+
+                        <div className='mt-10'>
+                            <Button 
+                                type="submit" 
+                                disabled={loading}
+                                className="h-14 w-full rounded-2xl bg-primary text-lg font-bold text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98]"
+                            >
+                                {loading ? (
+                                    <><Loader2 className='mr-2 h-5 w-5 animate-spin' /> Processing...</>
+                                ) : (
+                                    <>Sign In</>
+                                )}
+                            </Button>
+                        </div>
+                        
+                        <div className='mt-10 text-center text-sm font-medium'>
+                            <span className='text-slate-500 font-medium'>New to JobForge? </span>
+                            <Link to="/signup" className='font-bold text-primary hover:underline'>Create Account</Link>
+                        </div>
+                    </form>
+                </motion.div>
             </div>
         </div>
     )
 }
 
 export default Login
+

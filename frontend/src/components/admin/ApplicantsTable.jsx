@@ -56,6 +56,24 @@ const ApplicantsTable = () => {
         }
     }
 
+    const downloadResume = async (resumeUrl, resumeName) => {
+        try {
+            const response = await fetch(resolveApiAssetUrl(resumeUrl));
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = resumeName || 'resume.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(blobUrl);
+            toast.success("Downloading resume...");
+        } catch (e) {
+            window.open(resolveApiAssetUrl(resumeUrl), '_blank');
+        }
+    }
+
     return (
         <div>
             <Table>
@@ -73,13 +91,20 @@ const ApplicantsTable = () => {
                 <TableBody>
                     {
                         applicants && applicants?.applications?.map((item) => (
-                            <tr key={item._id}>
+                            <TableRow key={item._id}>
                                 <TableCell>{item?.applicant?.fullname}</TableCell>
                                 <TableCell>{item?.applicant?.email}</TableCell>
                                 <TableCell>{item?.applicant?.phoneNumber}</TableCell>
                                 <TableCell >
                                     {
-                                        item.applicant?.profile?.resume ? <a className="text-blue-600 cursor-pointer" href={resolveApiAssetUrl(item?.applicant?.profile?.resume)} target="_blank" rel="noopener noreferrer">{item?.applicant?.profile?.resumeOriginalName}</a> : <span>NA</span>
+                                        item.applicant?.profile?.resume ? (
+                                            <span 
+                                                className="text-blue-600 cursor-pointer hover:underline" 
+                                                onClick={() => downloadResume(item?.applicant?.profile?.resume, item?.applicant?.profile?.resumeOriginalName)}
+                                            >
+                                                {item?.applicant?.profile?.resumeOriginalName}
+                                            </span>
+                                        ) : <span>NA</span>
                                     }
                                 </TableCell>
                                 <TableCell>{item?.createdAt?.split("T")[0]}</TableCell>
@@ -101,7 +126,7 @@ const ApplicantsTable = () => {
                                         </PopoverContent>
                                     </Popover>
                                 </TableCell>
-                            </tr>
+                            </TableRow>
                         ))
                     }
                 </TableBody>
